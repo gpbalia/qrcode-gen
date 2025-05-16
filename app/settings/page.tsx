@@ -12,25 +12,25 @@ import { Mail, Lock } from 'lucide-react';
 export default function SettingsPage() {
   const { user } = useAuth();
   const [newEmail, setNewEmail] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   const handleUpdateEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
     try {
-      setLoading(true);
+      setEmailLoading(true);
       await updateEmail(user, newEmail);
-      toast.success('Email updated successfully');
+      toast.success('Your email has been successfully updated to ' + newEmail);
       setNewEmail('');
     } catch (error) {
       toast.error('Failed to update email. You may need to sign in again.');
       console.error('Error updating email:', error);
     } finally {
-      setLoading(false);
+      setEmailLoading(false);
     }
   };
 
@@ -44,17 +44,16 @@ export default function SettingsPage() {
     }
 
     try {
-      setLoading(true);
+      setPasswordLoading(true);
       await updatePassword(user, newPassword);
-      toast.success('Password updated successfully');
-      setCurrentPassword('');
+      toast.success('Your password has been successfully updated');
       setNewPassword('');
       setConfirmNewPassword('');
     } catch (error) {
       toast.error('Failed to update password. You may need to sign in again.');
       console.error('Error updating password:', error);
     } finally {
-      setLoading(false);
+      setPasswordLoading(false);
     }
   };
 
@@ -96,10 +95,10 @@ export default function SettingsPage() {
                 </div>
                 <Button
                   type="submit"
-                  disabled={loading}
+                  disabled={emailLoading}
                   className="bg-secondary hover:bg-secondary/90 text-secondary-foreground"
                 >
-                  {loading ? 'Updating...' : 'Update Email'}
+                  {emailLoading ? 'Updating...' : 'Update Email'}
                 </Button>
               </form>
             </div>
@@ -136,10 +135,10 @@ export default function SettingsPage() {
                 </div>
                 <Button
                   type="submit"
-                  disabled={loading}
+                  disabled={passwordLoading}
                   className="bg-secondary hover:bg-secondary/90 text-secondary-foreground"
                 >
-                  {loading ? 'Updating...' : 'Update Password'}
+                  {passwordLoading ? 'Updating...' : 'Update Password'}
                 </Button>
               </form>
             </div>
