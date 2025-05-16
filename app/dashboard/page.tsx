@@ -3,7 +3,7 @@
 import { Header } from '@/components/Header';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { QrCode, Settings, History, LogOut } from 'lucide-react';
+import { QrCode, Settings, History, LogOut, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -53,6 +53,19 @@ export default function Dashboard() {
               </div>
             </Link>
 
+            {/* Privacy Policy Card */}
+            <Link href="/privacy" className="block h-full">
+              <div className="bg-card rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col border border-border">
+                <div className="flex items-center space-x-4 mb-4">
+                  <Shield className="h-8 w-8 text-secondary shrink-0" />
+                  <h2 className="text-xl font-semibold">Privacy & Security</h2>
+                </div>
+                <p className="text-muted-foreground flex-grow">
+                  Learn about how we protect your data and respect your privacy.
+                </p>
+              </div>
+            </Link>
+
             {/* History Card (Coming Soon) */}
             <div className="bg-accent rounded-2xl p-8 shadow-lg h-full flex flex-col border border-border">
               <div className="flex items-center space-x-4 mb-4">
@@ -73,7 +86,7 @@ export default function Dashboard() {
               <p className="text-muted-foreground flex-grow mb-4">
                 Sign out of your account securely.
               </p>
-              <Button 
+              <Button
                 onClick={handleLogout}
                 variant="destructive"
                 className="w-full mt-auto"

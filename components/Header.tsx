@@ -10,14 +10,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { QrCode, User, Settings, LogOut } from 'lucide-react';
 
 export function Header() {
   const { user, logout } = useAuth();
   const router = useRouter();
-  
+  const pathname = usePathname();
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -37,6 +38,8 @@ export function Header() {
       .slice(0, 2);
   };
 
+  const showAuthButton = !user && pathname !== '/auth' && pathname !== '/privacy';
+
   return (
     <header className="border-b border-border bg-card">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -44,6 +47,12 @@ export function Header() {
           <QrCode className="h-6 w-6 text-secondary" />
           <span className="font-semibold text-xl">QR Generator</span>
         </Link>
+
+        {showAuthButton && (
+          <Link href="/auth">
+            <Button variant="secondary">Sign In</Button>
+          </Link>
+        )}
 
         {user && (
           <DropdownMenu>

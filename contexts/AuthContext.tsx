@@ -7,8 +7,11 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  getIdToken,
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 interface AuthContextType {
   user: User | null;
@@ -27,26 +30,57 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       setLoading(false);
+
+      if (user) {
+        // Get the ID token and store it in a cookie
+        const token = await getIdToken(user);
+        Cookies.set('firebaseToken', token, { expires: 7 }); // Expires in 7 days
+      } else {
+        // Remove the token cookie when user is not authenticated
+        Cookies.remove('firebaseToken');
+      }
     });
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const token = await getIdToken(result.user);
+      Cookies.set('firebaseToken', token, { expires: 7 });
+      router.push('/dashboard');
+    } catch (error) {
+      throw error;
+    }
   };
 
   const signUp = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    try {
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const token = await getIdToken(result.user);
+      Cookies.set('firebaseToken', token, { expires: 7 });
+      router.push('/dashboard');
+    } catch (error) {
+      throw error;
+    }
   };
 
   const logout = async () => {
-    await signOut(auth);
+    try {
+      await signOut(auth);
+      Cookies.remove('firebaseToken');
+      router.push('/auth');
+    } catch (error) {
+      console.error('Failed to logout:', error);
+      throw error;
+    }
   };
 
   const value = {
