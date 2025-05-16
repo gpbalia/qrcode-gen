@@ -37,7 +37,7 @@ export function SignUpForm() {
     <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
       <div className="space-y-2">
         <div className="relative">
-          <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+          <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
           <Input
             type="email"
             placeholder="Email address"
@@ -48,7 +48,7 @@ export function SignUpForm() {
           />
         </div>
         <div className="relative">
-          <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+          <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
           <Input
             type="password"
             placeholder="Password"
@@ -59,7 +59,7 @@ export function SignUpForm() {
           />
         </div>
         <div className="relative">
-          <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+          <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
           <Input
             type="password"
             placeholder="Confirm password"
@@ -70,10 +70,10 @@ export function SignUpForm() {
           />
         </div>
       </div>
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
       <Button
         type="submit"
-        className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+        className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground"
         disabled={loading}
       >
         {loading ? 'Creating account...' : 'Sign Up'}
